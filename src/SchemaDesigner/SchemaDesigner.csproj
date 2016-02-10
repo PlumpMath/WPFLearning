@@ -85,7 +85,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Business\Storage.cs" />
+    <Compile Include="Events\Events.cs" />
     <Compile Include="ShellViewModel.cs" />
+    <Compile Include="Views\HelpAbout.xaml.cs">
+      <DependentUpon>HelpAbout.xaml</DependentUpon>
+    </Compile>
     <Page Include="Shell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,12 +99,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Business\BusinessBase.cs" />
-    <Compile Include="Business\Entity.cs" />
+    <Compile Include="Business\Schema.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\HelpAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -200,6 +208,13 @@
   <ItemGroup>
     <Resource Include="Images\Schema\ClassImport_16x16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Help\Suggestion_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Help\Bug_16x16.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

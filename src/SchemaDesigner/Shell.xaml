@@ -5,10 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SchemaDesigner"
         mc:Ignorable="d"
-        Title="Schema Designer" Height="600" Width="800" WindowStartupLocation="CenterScreen" MinWidth="800" MinHeight="595">
-    <Window.DataContext>
-        <local:ShellViewModel/>
-    </Window.DataContext>
+        Title="Schema Designer" Height="600" Width="800" WindowStartupLocation="CenterScreen" MinWidth="600" MinHeight="400">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" CanExecute="NewCommandCanExecute" Executed="NewCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="OpenCommandCanExecute" Executed="OpenCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Save" CanExecute="SaveCommandCanExecute" Executed="SaveCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.SaveAs" CanExecute="SaveAsCommandCanExecute" Executed="SaveAsCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Close" CanExecute="CloseCommandCanExecute" Executed="CloseCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Undo" CanExecute="UndoCommandCanExecute" Executed="UndoCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Redo" CanExecute="RedoCommandCanExecute" Executed="RedoCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Cut" CanExecute="CutCommandCanExecute" Executed="CutCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Copy" CanExecute="CopyCommandCanExecute" Executed="CopyCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Paste" CanExecute="PasteCommandCanExecute" Executed="PasteCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Delete" CanExecute="DeleteCommandCanExecute" Executed="DeleteCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.SelectAll" CanExecute="SelectAllCommandCanExecute" Executed="SelectAllCommandExecuted" />
+        <CommandBinding Command="ApplicationCommands.Help" CanExecute="HelpCommandCanExecute" Executed="HelpCommandExecuted" />
+    </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -18,127 +30,144 @@
             <RowDefinition Height="21"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+        <Menu x:Name="ShellMenu" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="New Schema">
+                <MenuItem Header="New Schema" Command="ApplicationCommands.New">
                     <MenuItem.Icon>
                         <Image Source="/Images/File/NewSchema_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Open Schema...">
+                <MenuItem Header="Open Schema..." Command="ApplicationCommands.Open" >
                     <MenuItem.Icon>
                         <Image Source="/Images/File/OpenSchema_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Close Schema" >
+                <MenuItem Header="Close Schema" Command="{Binding CloseSchemaCommand}" IsEnabled="{Binding CloseSchemaCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/File/CloseSchema_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Save" >
+                <MenuItem Header="Save" Command="ApplicationCommands.Save" >
                     <MenuItem.Icon>
                         <Image Source="/Images/File/SaveSchema_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save As..." />
+                <MenuItem Header="Save As..." Command="ApplicationCommands.SaveAs" />
                 <Separator/>
-                <MenuItem Header="Exit">
+                <MenuItem Header="Exit" Command="ApplicationCommands.Close" >
                     <MenuItem.Icon>
                         <Image Source="/Images/File/Close_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Undo"  >
+                <MenuItem Header="_Undo"  Command="ApplicationCommands.Undo" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/Undo_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Redo"  >
+                <MenuItem Header="_Redo"  Command="ApplicationCommands.Redo" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/Redo_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="_Cut"  >
+                <MenuItem Header="_Cut"  Command="ApplicationCommands.Cut" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/Cut_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Copy"  >
+                <MenuItem Header="_Copy"  Command="ApplicationCommands.Copy" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/Copy_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Paste"  >
+                <MenuItem Header="_Paste"  Command="ApplicationCommands.Paste" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/Paste_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Delete Class"  >
+                <MenuItem Header="Delete Class" Command="{Binding DeleteClassCommand}" IsEnabled="{Binding DeleteClassCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/DeleteClass_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Delete Interface"  >
+                <MenuItem Header="Delete Interface" Command="{Binding DeleteInterfaceCommand}" IsEnabled="{Binding DeleteInterfaceCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/DeleteInterface_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Delete Property"  >
+                <MenuItem Header="Delete Property" Command="{Binding DeletePropertyCommand}" IsEnabled="{Binding DeletePropertyCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/DeleteProperty_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                
+
                 <Separator/>
-                <MenuItem Header="_Select All"  >
+                <MenuItem Header="_Select All"  Command="ApplicationCommands.SelectAll" >
                     <MenuItem.Icon>
                         <Image Source="/Images/Edit/SelectAll_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Select _None" >
+                <MenuItem Header="Select _None" Command="{Binding SelectNoneCommand}" IsEnabled="{Binding SelectNoneCommandCanExecute}">
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Schema">
                 <MenuItem Header="Class">
-                    <MenuItem Header="Add Class..." >
+                    <MenuItem Header="Add Class..." Command="{Binding AddClassCommand}" IsEnabled="{Binding AddClassCommandCanExecute}">
                         <MenuItem.Icon>
                             <Image Source="/Images/Schema/ClassAdded_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Export" >
+                    <MenuItem Header="Export" Command="{Binding ExportClassCommand}" IsEnabled="{Binding ExportClassCommandCanExecute}">
                         <MenuItem.Icon>
                             <Image Source="/Images/Schema/ClassExport_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Import" >
+                    <MenuItem Header="Import" Command="{Binding ImportClassCommand}" IsEnabled="{Binding ImportClassCommandCanExecute}">
                         <MenuItem.Icon>
                             <Image Source="/Images/Schema/ClassImport_16x16.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Add Interface..."  >
+                <MenuItem Header="Add Interface..."  Command="{Binding AddInterfaceCommand}" IsEnabled="{Binding AddInterfaceCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Schema/InterfaceAdded_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Add Property..."  >
+                <MenuItem Header="Add Property..."  Command="{Binding AddPropertyCommand}" IsEnabled="{Binding AddPropertyCommandCanExecute}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Schema/PropertyAdded_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_About Schema Designer" >
+                <MenuItem Header="View Help" Command="ApplicationCommands.Help">
                     <MenuItem.Icon>
                         <Image Source="/Images/Help/Help_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator />
+                <MenuItem Header="Send Feedback">
+                    <MenuItem Header="Report A Problem..." Command="{Binding HelpReportAProblemCommand}" IsEnabled="False">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/Help/Bug_16x16.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Provide A Suggestion..." Command="{Binding HelpProvideASuggestionCommand}" IsEnabled="False">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/Help/Suggestion_16x16.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_About Schema Designer..." Command="{Binding HelpAboutCommand}" IsEnabled="{Binding HelpAboutCommandCanExecute}" />
             </MenuItem>
         </Menu>
+        <TreeView x:Name="ShellTree" Grid.Row="1" Grid.Column="0" Margin="2"/>
+
     </Grid>
 
 </Window>
